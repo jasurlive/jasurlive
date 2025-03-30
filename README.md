@@ -2,7 +2,7 @@
 
   ## 👋 Hola! Me llamo Jasur!
   
-  ### ⚡ I'm an electronics nerd with a passion for coding & tech!
+  ### ⚡ If coding was a drug, I would've died from an overdose
   
   ---
   
