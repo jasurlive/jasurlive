@@ -2,7 +2,7 @@
 
   ## 👋 Hola! Me llamo Jasur!
   
-  ### ⚡ If coding was a drug, I would've died from an overdose
+  ### ⚡ console.log("The secret to success: Start, then give up, then blame the universe");
   
   ---
   
