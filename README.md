@@ -29,7 +29,6 @@
     <img src="https://img.shields.io/badge/-React%20TS-61DAFB?logo=react&logoColor=black&style=flat" alt="React TypeScript" />
     <img src="https://img.shields.io/badge/-Django-092E20?logo=django&logoColor=white&style=flat" alt="Django" />
     <img src="https://img.shields.io/badge/-Vue-4FC08D?logo=vue.js&logoColor=white&style=flat" alt="Vue" />
-    
     <img src="https://img.shields.io/badge/-More%20coming...-E0E0E0?logo=hourglass&logoColor=black&style=flat" alt="More coming..." />
   </p>
 
