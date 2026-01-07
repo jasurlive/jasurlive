@@ -42,8 +42,10 @@
 
 
 
-  <img src="https://github-readme-stats.vercel.app/api?username=jasurlive&hide_title=false&hide_rank=false&show_icons=true&include_all_commits=true&count_private=true&theme=github_dark_dimmed&locale=en&hide_border=true&cache_seconds=1800" height="150" alt="stats graph"/>
-<img src="https://github-readme-stats.vercel.app/api/top-langs?username=jasurlive&locale=en&hide_title=false&layout=compact&card_width=320&langs_count=10&theme=github_dark_dimmed&hide_border=true&cache_seconds=1800" height="150" alt="languages graph"/>
+| Stats | Repos per Language |
+| --- | --- |
+| ![](https://github-profile-summary-cards.vercel.app/api/cards/stats?username=jasurlive&theme=github_dark) | ![](https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=jasurlive&theme=github_dark) |
+
 
 
 
