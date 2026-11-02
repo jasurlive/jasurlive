@@ -1,46 +1,49 @@
-// Minimal GitHub stats cards \u2014 uses only GitHub's REST API, no dependencies
+// Minimal GitHub stats cards - GitHub REST API only, no dependencies
 import { writeFileSync, mkdirSync } from "node:fs";
 
 const USER = process.env.GH_USER || "jasurlive";
 const TOKEN = process.env.GITHUB_TOKEN;
-const headers = {
-  "User-Agent": "stats-card",
-  Accept: "application/vnd.github+json",
-  ...(TOKEN && { Authorization: `Bearer ${TOKEN}` }),
-};
-const api = async (path) => {
-  const r = await fetch(`https://api.github.com${path}`, { headers });
-  if (!r.ok) throw new Error(`${r.status} ${path}`);
-  return r.json();
-};
 
-// --- fetch data ---
+const api = async (path) => {
+  const res = await fetch(`https://api.github.com${path}`, {
+    headers: {
+      "User-Agent": "stats-card",
+      Accept: "application/vnd.github+json",
+      ...(TOKEN && { Authorization: `Bearer ${TOKEN}` }),
+    },
+  });
+  if (!res.ok) throw new Error(`${res.status} ${path}`);
+  return res.json();
+};
+const count = async (q) => (await api(`/search/${q}`)).total_count;
+
+// ---------- data ----------
 const user = await api(`/users/${USER}`);
-let repos = [];
+
+const repos = [];
 for (let page = 1; ; page++) {
   const batch = await api(
     `/users/${USER}/repos?per_page=100&type=owner&page=${page}`
   );
-  repos.push(...batch);
+  repos.push(...batch.filter((r) => !r.fork));
   if (batch.length < 100) break;
 }
-repos = repos.filter((r) => !r.fork);
 
-const stars = repos.reduce((s, r) => s + r.stargazers_count, 0);
-const forks = repos.reduce((s, r) => s + r.forks_count, 0);
-const prs = (await api(`/search/issues?q=author:${USER}+type:pr`)).total_count;
-const issues = (await api(`/search/issues?q=author:${USER}+type:issue`))
-  .total_count;
-const commits = (await api(`/search/commits?q=author:${USER}`)).total_count;
+const rows = [
+  ["Total stars", repos.reduce((sum, r) => sum + r.stargazers_count, 0)],
+  ["Commits", await count(`commits?q=author:${USER}`)],
+  ["Pull requests", await count(`issues?q=author:${USER}+type:pr`)],
+  ["Issues", await count(`issues?q=author:${USER}+type:issue`)],
+];
 
 const langCount = {};
-for (const r of repos)
-  if (r.language) langCount[r.language] = (langCount[r.language] || 0) + 1;
+for (const { language } of repos)
+  if (language) langCount[language] = (langCount[language] || 0) + 1;
 const langs = Object.entries(langCount)
   .sort((a, b) => b[1] - a[1])
   .slice(0, 6);
 
-// --- draw SVGs ---
+// ---------- style ----------
 const C = {
   bg: "#0d1117",
   border: "#30363d",
@@ -48,19 +51,44 @@ const C = {
   text: "#c9d1d9",
   muted: "#8b949e",
 };
-const PALETTE = [
-  "#58a6ff",
-  "#3fb950",
-  "#d29922",
-  "#f778ba",
-  "#a371f7",
-  "#ff7b72",
-];
+
+// GitHub's official language colors (github/linguist)
+const LANG_COLORS = {
+  JavaScript: "#f1e05a",
+  TypeScript: "#3178c6",
+  Python: "#3572A5",
+  HTML: "#e34c26",
+  CSS: "#663399",
+  SCSS: "#c6538c",
+  "Jupyter Notebook": "#DA5B0B",
+  Java: "#b07219",
+  C: "#555555",
+  "C++": "#f34b7d",
+  "C#": "#178600",
+  Go: "#00ADD8",
+  Rust: "#dea584",
+  PHP: "#4F5D95",
+  Ruby: "#701516",
+  Swift: "#F05138",
+  Kotlin: "#A97BFF",
+  Dart: "#00B4AB",
+  Shell: "#89e051",
+  Vue: "#41b883",
+  Svelte: "#ff3e00",
+  Lua: "#000080",
+  R: "#198CE7",
+  Dockerfile: "#384d54",
+  Astro: "#ff5a03",
+  Solidity: "#AA6746",
+};
+const color = (lang) => LANG_COLORS[lang] || C.muted;
+
 const esc = (s) =>
   String(s).replace(
     /[&<>"]/g,
     (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c])
   );
+
 const card = (
   w,
   h,
@@ -74,62 +102,61 @@ const card = (
 <text x="20" y="32" font-size="16" font-weight="600" fill="${C.title}">${esc(
   title
 )}</text>
-${body}</svg>`;
+${body}
+</svg>`;
 
-const rows = [
-  ["Total stars", stars],
-  ["Total forks", forks],
-  ["Commits", commits],
-  ["Pull requests", prs],
-  ["Issues", issues],
-  ["Public repos", user.public_repos],
-  ["Followers", user.followers],
-];
+// ---------- stats card ----------
 const statsBody = rows
-  .map(
-    ([k, v], i) =>
-      `<text x="20" y="${62 + i * 22}" font-size="13" fill="${
-        C.muted
-      }">${k}</text>` +
-      `<text x="280" y="${
-        62 + i * 22
-      }" font-size="13" font-weight="600" fill="${
+  .map(([label, value], i) => {
+    const y = 62 + i * 22;
+    return (
+      `<text x="20" y="${y}" font-size="13" fill="${C.muted}">${label}</text>` +
+      `<text x="280" y="${y}" font-size="13" font-weight="600" fill="${
         C.text
-      }" text-anchor="end">${v.toLocaleString("en-US")}</text>`
-  )
+      }" text-anchor="end">${value.toLocaleString("en-US")}</text>`
+    );
+  })
   .join("\n");
 
-const total = langs.reduce((s, [, n]) => s + n, 0) || 1;
+// ---------- languages card ----------
+const total = langs.reduce((sum, [, n]) => sum + n, 0) || 1;
 let x = 20;
 const bar = langs
-  .map(([, n], i) => {
-    const w = (n / total) * 260,
-      seg = `<rect x="${x}" y="48" width="${w}" height="8" fill="${PALETTE[i]}"/>`;
+  .map(([lang, n]) => {
+    const w = (n / total) * 260;
+    const seg = `<rect x="${x}" y="48" width="${w}" height="8" fill="${color(
+      lang
+    )}"/>`;
     x += w;
     return seg;
   })
   .join("");
+
 const legend = langs
-  .map(([l, n], i) => {
-    const cx = 20 + (i % 2) * 135,
-      cy = 80 + Math.floor(i / 2) * 22;
+  .map(([lang, n], i) => {
+    const cx = 20 + (i % 2) * 135;
+    const cy = 80 + Math.floor(i / 2) * 22;
     return (
-      `<circle cx="${cx + 5}" cy="${cy - 4}" r="5" fill="${PALETTE[i]}"/>` +
+      `<circle cx="${cx + 5}" cy="${cy - 4}" r="5" fill="${color(lang)}"/>` +
       `<text x="${cx + 16}" y="${cy}" font-size="12" fill="${C.text}">${esc(
-        l
+        lang
       )} <tspan fill="${C.muted}">${n}</tspan></text>`
     );
   })
   .join("\n");
-const langBody = `<clipPath id="r"><rect x="20" y="48" width="260" height="8" rx="4"/></clipPath><g clip-path="url(#r)">${bar}</g>\n${legend}`;
 
+const langsBody =
+  `<clipPath id="r"><rect x="20" y="48" width="260" height="8" rx="4"/></clipPath>` +
+  `<g clip-path="url(#r)">${bar}</g>\n${legend}`;
+
+// ---------- write ----------
 mkdirSync("stats", { recursive: true });
 writeFileSync(
   "stats/stats.svg",
   card(
     300,
     62 + rows.length * 22,
-    `${user.name || USER}'s GitHub Stats`,
+    `${user.name || USER}'s github stats`,
     statsBody
   )
 );
@@ -139,7 +166,7 @@ writeFileSync(
     300,
     80 + Math.ceil(langs.length / 2) * 22,
     "Repos per language",
-    langBody
+    langsBody
   )
 );
-console.log({ stars, forks, commits, prs, issues, langs });
+console.log(Object.fromEntries(rows), langs);
