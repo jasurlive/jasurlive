@@ -89,14 +89,13 @@ const esc = (s) =>
 
 // shared size: both cards grow to fit the longer one
 const W = 300;
-const LINE_Y = (i) => 80 + i * 22;
-const H = 70 + Math.max(rows.length, langs.length) * 22;
+const LINE_Y = (i) => 64 + i * 22;
+const H = 60 + Math.max(rows.length, langs.length) * 22;
 
 const card = (cmd, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <style>text{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
 <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="8" fill="${C.bg}" stroke="${C.border}"/>
-
-<text x="20" y="52" fill="${C.prompt}">jasur@framework ❯ <tspan fill="${C.text}">cat ${cmd}.md</tspan></text>
+<text x="20" y="34" fill="${C.prompt}">${esc(USER)}@framework ❯ <tspan fill="${C.text}">cat ${cmd}.md</tspan></text>
 ${body}
 </svg>`;
 
