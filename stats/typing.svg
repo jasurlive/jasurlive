@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="754" height="44" viewBox="0 0 754 44">
+<style>
+text{font:14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.type{animation:slide 4.25s steps(85) .5s both}
+.cursor{animation:slide 4.25s steps(85) .5s both,blink 1s step-end 4.75s infinite}
+@keyframes slide{to{transform:translateX(714px)}}
+@keyframes blink{50%{opacity:0}}
+</style>
+<rect x="0.5" y="0.5" width="753" height="43" rx="8" fill="#0d1117"/>
+<text x="20" y="27" textLength="714" fill="#c9d1d9"><tspan fill="#3fb950">❯ </tspan>console.log(&quot;the secret to success: start, then give up, then blame the universe&quot;);</text>
+<rect class="type" x="20" y="10" width="714" height="24" fill="#0d1117"/>
+<rect class="cursor" x="20" y="15" width="8" height="16" fill="#3fb950"/>
+<rect x="0.5" y="0.5" width="753" height="43" rx="8" fill="none" stroke="#30363d"/>
+</svg>
