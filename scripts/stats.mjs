@@ -23,7 +23,7 @@ const user = await api(`/users/${USER}`);
 const repos = [];
 for (let page = 1; ; page++) {
   const batch = await api(
-    `/users/${USER}/repos?visibility=all&affiliation=owner&per_page=100&page=${page}`
+    `/users/${USER}/repos?per_page=100&type=owner&page=${page}`
   );
   repos.push(...batch.filter((r) => !r.fork));
   if (batch.length < 100) break;
