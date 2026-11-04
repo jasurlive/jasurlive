@@ -116,8 +116,30 @@ const langsBody = langs
   )
   .join("\n");
 
+// ---------- typing banner (CSS only, plays once) ----------
+const CODE = `console.log("the secret to success: start, then give up, then blame the universe");`;
+const N = CODE.length + 2; // + "❯ " prefix
+const TW = N * 8.4; // text width, 8.4px per char at 14px monospace
+const DUR = N * 0.05;
+
+const typing = `<svg xmlns="http://www.w3.org/2000/svg" width="${TW + 40}" height="44" viewBox="0 0 ${TW + 40} 44">
+<style>
+text{font:14px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.type{animation:slide ${DUR}s steps(${N}) .5s both}
+.cursor{animation:slide ${DUR}s steps(${N}) .5s both,blink 1s step-end ${DUR + 0.5}s infinite}
+@keyframes slide{to{transform:translateX(${TW}px)}}
+@keyframes blink{50%{opacity:0}}
+</style>
+<rect x="0.5" y="0.5" width="${TW + 39}" height="43" rx="8" fill="${C.bg}"/>
+<text x="20" y="27" textLength="${TW}" fill="${C.text}"><tspan fill="${C.prompt}">❯ </tspan>${esc(CODE)}</text>
+<rect class="type" x="20" y="10" width="${TW}" height="24" fill="${C.bg}"/>
+<rect class="cursor" x="20" y="15" width="8" height="16" fill="${C.prompt}"/>
+<rect x="0.5" y="0.5" width="${TW + 39}" height="43" rx="8" fill="none" stroke="${C.border}"/>
+</svg>`;
+
 // ---------- write ----------
 mkdirSync("stats", { recursive: true });
 writeFileSync("stats/stats.svg", card("stats", statsBody));
 writeFileSync("stats/langs.svg", card("langs", langsBody));
+writeFileSync("stats/typing.svg", typing);
 console.log(Object.fromEntries(rows), langs);
