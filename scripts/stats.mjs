@@ -95,11 +95,8 @@ const H = 70 + Math.max(rows.length, langs.length) * 22;
 const card = (cmd, body) => `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
 <style>text{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
 <rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" rx="8" fill="${C.bg}" stroke="${C.border}"/>
-<circle cx="18" cy="16" r="5" fill="#ff5f56"/>
-<circle cx="36" cy="16" r="5" fill="#ffbd2e"/>
-<circle cx="54" cy="16" r="5" fill="#27c93f"/>
-<text x="74" y="20" font-size="12" fill="${C.muted}">${esc(USER)}@github</text>
-<text x="20" y="52" fill="${C.prompt}">$ <tspan fill="${C.text}">${cmd}</tspan></text>
+
+<text x="20" y="52" fill="${C.prompt}">jasur@framework ❯ <tspan fill="${C.text}">cat ${cmd}.md</tspan></text>
 ${body}
 </svg>`;
 
