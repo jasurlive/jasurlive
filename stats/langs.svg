@@ -1,9 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="300" height="148" viewBox="0 0 300 148">
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="170" viewBox="0 0 300 170">
 <style>text{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}</style>
-<rect x="0.5" y="0.5" width="299" height="147" rx="8" fill="#0d1117" stroke="#30363d"/>
+<rect x="0.5" y="0.5" width="299" height="169" rx="8" fill="#0d1117" stroke="#30363d"/>
 <text x="20" y="34" fill="#3fb950">jasurlive@framework ❯ <tspan fill="#c9d1d9">cat langs.md</tspan></text>
 <circle cx="25" cy="60" r="5" fill="#3178c6"/><text x="40" y="64" fill="#c9d1d9">TypeScript</text>
 <circle cx="25" cy="82" r="5" fill="#f1e05a"/><text x="40" y="86" fill="#c9d1d9">JavaScript</text>
 <circle cx="25" cy="104" r="5" fill="#00B4AB"/><text x="40" y="108" fill="#c9d1d9">Dart</text>
 <circle cx="25" cy="126" r="5" fill="#663399"/><text x="40" y="130" fill="#c9d1d9">CSS</text>
+<circle cx="25" cy="148" r="5" fill="#3572A5"/><text x="40" y="152" fill="#c9d1d9">Python</text>
 </svg>
