@@ -100,6 +100,75 @@ ${body}
 </svg>`;
 
 // ---------- cards ----------
+// language-share chart drawn right of the language list (shares by repo count)
+// CHART: "pie" | "donut" | "bars" | "waffle"
+const CHART = process.env.CHART || "bars";
+const chart = (() => {
+  const slices = Object.entries(langCount).sort((a, b) => b[1] - a[1]);
+  const top = slices.slice(0, 6);
+  const rest = slices.slice(6).reduce((s, [, n]) => s + n, 0);
+  if (rest) top.push(["Other", rest]);
+  const total = top.reduce((s, [, n]) => s + n, 0);
+  if (!total) return "";
+  const color = (lang) => LANG_COLORS[lang] || C.muted;
+  const cx = 236, cy = (64 + LINE_Y(langs.length - 1)) / 2 - 4;
+
+  if (CHART === "donut") {
+    // each slice is a dashed segment of one ring, starting at 12 o'clock
+    const r = 36, len = 2 * Math.PI * r;
+    let off = 0;
+    return top
+      .map(([lang, n]) => {
+        const seg = (n / total) * len;
+        const el = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${color(lang)}" stroke-width="14" stroke-dasharray="${seg.toFixed(2)} ${len.toFixed(2)}" stroke-dashoffset="${(-off).toFixed(2)}" transform="rotate(-90 ${cx} ${cy})"/>`;
+        off += seg;
+        return el;
+      })
+      .join("\n");
+  }
+
+  if (CHART === "bars") {
+    // one bar per listed language, on its own row, scaled to the largest
+    const max = langCount[langs[0]];
+    return langs
+      .map((lang, i) => {
+        const w = Math.max(4, (langCount[lang] / max) * 100);
+        return `<rect x="180" y="${LINE_Y(i) - 9}" width="${w.toFixed(1)}" height="10" rx="5" fill="${color(lang)}"/>`;
+      })
+      .join("\n");
+  }
+
+  if (CHART === "waffle") {
+    // 10x10 grid, one cell = 1% (largest-remainder rounding so it sums to 100)
+    const raw = top.map(([, n]) => (n / total) * 100);
+    const cells = raw.map(Math.floor);
+    raw
+      .map((v, i) => [v - cells[i], i])
+      .sort((a, b) => b[0] - a[0])
+      .slice(0, 100 - cells.reduce((a, b) => a + b, 0))
+      .forEach(([, i]) => cells[i]++);
+    const fills = top.flatMap(([lang], i) => Array(cells[i]).fill(color(lang)));
+    const S = 8, G = 2, x0 = cx - 49, y0 = cy - 49;
+    return fills
+      .map((f, k) => `<rect x="${x0 + (k % 10) * (S + G)}" y="${y0 + Math.floor(k / 10) * (S + G)}" width="${S}" height="${S}" rx="2" fill="${f}"/>`)
+      .join("\n");
+  }
+
+  // pie
+  const r = 44;
+  if (top.length === 1) return `<circle cx="${cx}" cy="${cy}" r="${r}" fill="${color(top[0][0])}"/>`;
+  let a = -Math.PI / 2;
+  const pt = (t) => `${(cx + r * Math.cos(t)).toFixed(2)},${(cy + r * Math.sin(t)).toFixed(2)}`;
+  return top
+    .map(([lang, n]) => {
+      const b = a + (n / total) * 2 * Math.PI;
+      const d = `M${cx},${cy} L${pt(a)} A${r},${r} 0 ${b - a > Math.PI ? 1 : 0} 1 ${pt(b)} Z`;
+      a = b;
+      return `<path d="${d}" fill="${color(lang)}"/>`;
+    })
+    .join("\n");
+})();
+
 const statsBody = rows
   .map(
     ([label, value], i) =>
@@ -114,7 +183,7 @@ const langsBody = langs
       `<circle cx="25" cy="${LINE_Y(i) - 4}" r="5" fill="${LANG_COLORS[lang] || C.muted}"/>` +
       `<text x="40" y="${LINE_Y(i)}" fill="${C.text}">${esc(lang)}</text>`
   )
-  .join("\n");
+  .join("\n") + "\n" + chart;
 
 // ---------- typing banner (CSS only, plays once) ----------
 const CODE = `console.log("the secret to success: start, then give up, then blame the universe");`;
