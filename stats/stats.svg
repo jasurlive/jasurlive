@@ -3,7 +3,7 @@
 <rect x="0.5" y="0.5" width="299" height="169" rx="8" fill="#0d1117" stroke="#30363d"/>
 <text x="20" y="34" fill="#3fb950">jasurlive@framework ❯ <tspan fill="#c9d1d9">cat stats.md</tspan></text>
 <text x="20" y="64" fill="#8b949e">Total stars</text><text x="280" y="64" fill="#c9d1d9" text-anchor="end">10</text>
-<text x="20" y="86" fill="#8b949e">Commits</text><text x="280" y="86" fill="#c9d1d9" text-anchor="end">339</text>
-<text x="20" y="108" fill="#8b949e">Pull requests</text><text x="280" y="108" fill="#c9d1d9" text-anchor="end">293</text>
+<text x="20" y="86" fill="#8b949e">Commits</text><text x="280" y="86" fill="#c9d1d9" text-anchor="end">346</text>
+<text x="20" y="108" fill="#8b949e">Pull requests</text><text x="280" y="108" fill="#c9d1d9" text-anchor="end">302</text>
 <text x="20" y="130" fill="#8b949e">Issues</text><text x="280" y="130" fill="#c9d1d9" text-anchor="end">17</text>
 </svg>
