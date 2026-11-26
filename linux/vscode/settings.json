@@ -1,0 +1,112 @@
+{
+  "window.titleBarStyle": "custom",
+"update.mode": "none",
+  "extensions.autoUpdate": false,
+  "git.autorefresh": true,
+  "git.autofetch": true,
+  "git.enabled": true,
+  "python.languageServer": "Pylance",
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.diagnosticMode": "workspace",
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "workbench.startupEditor": "none",
+  "workbench.iconTheme": "vscode-icons",
+  "python.createEnvironment.trigger": "off",
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 0,
+  "files.autoSaveWhenNoErrors": true,
+  "extensions.ignoreRecommendations": true,
+  "explorer.confirmDelete": false,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[python]": {
+  
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.formatOnType": true,
+    "editor.wordBasedSuggestions": "allDocuments",
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "emmet.includeLanguages": {
+    "django-html": "html"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "vsicons.dontShowNewVersionMessage": true,
+  "remote.SSH.remotePlatform": {
+    "192.168.2.100": "linux",
+    "192.168.2.101": "linux",
+    "sayt.uz": "linux",
+    "192.168.2.78": "linux",
+    "192.168.2.21": "linux",
+    "192.168.2.78/Dell": "linux",
+    "192.168.2.21/RaspberryPi4": "linux",
+    "192.168.2.101/jasurlive": "linux",
+    "192.168.2.111": "linux",
+    "192.168.1.142/minipcintel": "linux",
+    "192.168.1.71/minipcintel": "linux",
+    "192.168.1.104/minipcintel": "linux",
+    "192.168.1.77/minipcintel": "linux",
+    "192.168.2.100/planerka": "linux",
+    "192.168.1.77/minipcintelAfro": "linux"
+  },
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "terminal.integrated.initialHint": false,
+  "extensions.autoCheckUpdates": false,
+  "vscode-office.editorTheme": "Github Dark",
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "security.workspace.trust.untrustedFiles": "open",
+  "python.analysis.autoFormatStrings": true,
+  "python.analysis.autoImportCompletions": true,
+  "python.analysis.diagnosticSeverityOverrides": {
+    "reportOptionalMemberAccess": "none"
+
+  },
+  "update.showReleaseNotes": false,
+  "update.enableWindowsBackgroundUpdates": false,
+  "terminal.integrated.profiles.linux": {
+  
+    "bash": {
+      "path": "bash",
+      "icon": "terminal-bash"
+    },
+    "zsh": {
+      "path": "zsh"
+    },
+    "fish": {
+      "path": "fish"
+    },
+    "tmux": {
+      "path": "tmux",
+      "icon": "terminal-tmux"
+    },
+    "pwsh": {
+      "path": "pwsh",
+      "icon": "terminal-powershell"
+    }
+  },
+  "explorer.confirmPasteNative": false,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "files.watcherExclude": {
+      "**/node_modules/**": true,
+      "**/.venv/**": true,
+      "**/venv/**": true,
+      "**/dist/**": true,
+      "**/build/**": true
+    },
+    "terminal.integrated.mouseWheelScrollSensitivity": 3,
+    "terminal.integrated.gpuAcceleration": "off"
+}

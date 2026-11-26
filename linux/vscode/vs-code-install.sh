@@ -49,10 +49,46 @@ CODE=/opt/vscode/bin/code
 info "Linking VSCode settings and keybindings"
 mkdir -p "$HOME/.config/Code/User"
 for f in settings.json keybindings.json; do
+  src="$HERE/$f"
   dst="$HOME/.config/Code/User/$f"
+
+  # Never create a link to a file that doesn't exist (VSCode then fails with
+  # ENOENT on every save). If the repo lacks the file but there is a real one
+  # in ~/.config, adopt it into the repo instead; otherwise skip.
+  if [[ ! -f $src ]]; then
+    if [[ -f $dst && ! -L $dst ]]; then
+      info "  $f missing in $HERE; adopting existing $dst"
+      cp "$dst" "$src"
+    else
+      echo "  WARNING: $src not found; leaving $dst alone (VSCode will create it)"
+      continue
+    fi
+  fi
+
+  # Back up a real file; a symlink (including a broken one) is just replaced.
   [[ -e $dst && ! -L $dst ]] && mv "$dst" "$dst.pre-dotfiles.$(date +%s)"
-  ln -sf "$HERE/$f" "$dst"
+  ln -sfn "$src" "$dst"
 done
+
+# 2b) Register vscode:// URL handler so browser sign-in (GitHub, etc.)
+#     can hand back to VSCode. Tarball installs don't do this on their own.
+info "Registering vscode:// URL handler"
+apps="$HOME/.local/share/applications"
+mkdir -p "$apps"
+cat > "$apps/code-url-handler.desktop" <<'EOF'
+[Desktop Entry]
+Name=Visual Studio Code - URL Handler
+Comment=Handle vscode:// links
+Exec=/opt/vscode/code --open-url %U
+Icon=/opt/vscode/resources/app/resources/linux/code.png
+Type=Application
+NoDisplay=true
+StartupNotify=true
+Categories=Utility;TextEditor;Development;IDE;
+MimeType=x-scheme-handler/vscode;
+EOF
+xdg-mime default code-url-handler.desktop x-scheme-handler/vscode || true
+command -v update-desktop-database >/dev/null && update-desktop-database "$apps" || true
 
 # 3) Install extensions (pinned-version editor won't auto-update them)
 if [[ -s $HERE/extensions.txt ]]; then
