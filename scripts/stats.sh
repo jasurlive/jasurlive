@@ -28,9 +28,10 @@ values=(
   "$(count "issues?q=author:$USER+type:issue")"
 )
 
-# top 6 languages by repo count, as "count<TAB>language" lines
-mapfile -t langs < <(jq -r '[.[].language | select(.)] | group_by(.)
-  | map([length, .[0]]) | sort_by(-.[0]) | .[:6][] | @tsv' <<<"$repos")
+# top 6 languages by repo count, ties -> most recently pushed first ("count<TAB>language")
+mapfile -t langs < <(jq -r 'map(select(.language)) | group_by(.language)
+  | map([length, .[0].language, (map(.pushed_at) | max)])
+  | sort_by(.[2]) | reverse | sort_by(-.[0]) | .[:6][] | .[:2] | @tsv' <<<"$repos")
 
 # ---------- style ----------
 BG="#0d1117" BORDER="#30363d" TEXT="#c9d1d9" MUTED="#8b949e" PROMPT="#3fb950"
